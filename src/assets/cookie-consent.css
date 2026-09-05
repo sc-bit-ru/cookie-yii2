@@ -1,0 +1,100 @@
+#cookieConsent {
+	display: none;
+	width: 100%;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	background: #111;
+	color: #fff;
+	font-size: 13px;
+	line-height: 1.45;
+	padding: 14px 0;
+	z-index: 10050;
+	box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.25);
+}
+
+#cookieConsent.show {
+	display: block;
+}
+
+#cookieConsent .cookie-consent-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 16px;
+	max-width: 1140px;
+	margin: 0 auto;
+	padding: 0 16px;
+}
+
+#cookieConsent .cookie-consent-text {
+	margin: 0;
+	flex: 1 1 auto;
+}
+
+#cookieConsent .cookie-consent-actions {
+	display: flex;
+	flex-shrink: 0;
+	gap: 8px;
+}
+
+#cookieConsent a {
+	color: #ffe27a;
+	text-decoration: underline;
+}
+
+.cookie-consent-btn {
+	display: inline-block;
+	min-width: 140px;
+	padding: 8px 14px;
+	border-radius: 4px;
+	border: 1px solid #fff;
+	font-size: 13px;
+	line-height: 1.2;
+	cursor: pointer;
+	text-align: center;
+	text-decoration: none;
+}
+
+#cookieConsent .cookie-consent-btn-secondary {
+	background: transparent;
+	color: #fff;
+}
+
+#cookieConsent .cookie-consent-btn-primary {
+	background: #fff;
+	color: #111;
+}
+
+.cookie-yii2-page .cookie-consent-btn-secondary {
+	background: #fff;
+	color: #111;
+	border-color: #111;
+}
+
+.cookie-yii2-page .cookie-consent-btn-primary {
+	background: #111;
+	color: #fff;
+	border-color: #111;
+}
+
+.cookie-consent-btn:hover,
+.cookie-consent-btn:focus {
+	opacity: 0.92;
+}
+
+@media (max-width: 767px) {
+	#cookieConsent .cookie-consent-inner {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	#cookieConsent .cookie-consent-actions {
+		flex-direction: column;
+	}
+
+	#cookieConsent .cookie-consent-btn {
+		width: 100%;
+		min-width: 0;
+	}
+}
