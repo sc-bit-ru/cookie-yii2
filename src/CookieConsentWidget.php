@@ -102,7 +102,7 @@ class CookieConsentWidget extends Widget
      */
     protected function resolveMode()
     {
-        if ($this->isFreePage()) {
+        if (SearchCrawler::isSearchCrawler() || $this->isFreePage()) {
             return self::MODE_BANNER;
         }
         if ($this->overlayPaths) {

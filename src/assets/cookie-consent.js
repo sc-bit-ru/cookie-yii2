@@ -51,6 +51,10 @@
 		return document.getElementById('cookieConsent');
 	}
 
+	function isSearchCrawler() {
+		return /Googlebot|Google-InspectionTool|GoogleOther|Google-Extended|YandexBot|YandexWebmaster|YandexRenderResourcesBot|YandexImages|YandexVideo|YandexMedia|YandexMobileBot|bingbot|BingPreview|DuckDuckBot|Mail\.RU_Bot|Applebot|Baiduspider/i.test(navigator.userAgent || '');
+	}
+
 	function isOverlay(box) {
 		return !!(box && box.getAttribute('data-cookie-consent-mode') === 'overlay');
 	}
@@ -125,6 +129,12 @@
 	document.addEventListener('DOMContentLoaded', function () {
 		var box = getBox();
 		var consent = getCookie(COOKIE_NAME);
+
+		if (isSearchCrawler()) {
+			hideBanner(box);
+			bindButtons();
+			return;
+		}
 
 		if (consent === 'all') {
 			loadAnalytics();
