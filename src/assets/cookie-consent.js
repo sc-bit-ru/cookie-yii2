@@ -1,4 +1,5 @@
 // Cookie consent (152-ФЗ): явное согласие, аналитика только после «Принять все».
+// mode=banner — сайт открыт; mode=wall — без all экран закрыт (см. README).
 (function () {
 	var COOKIE_NAME = 'cookieConsent';
 	var METRIKA_COOKIES = ['_ym_uid', '_ym_d', '_ym_isad', '_ym_visorc', '_ym_debug'];
@@ -46,20 +47,74 @@
 			|| (window.webdkMetrika && window.webdkMetrika.loaded);
 	}
 
+	function getBox() {
+		return document.getElementById('cookieConsent');
+	}
+
+	function getMode(box) {
+		return (box && box.getAttribute('data-cookie-consent-mode')) || 'banner';
+	}
+
+	function isWall(box) {
+		return getMode(box) === 'wall';
+	}
+
+	function lockPage(on) {
+		var root = document.documentElement;
+		if (on) {
+			root.classList.add('cookie-yii2-locked');
+		} else {
+			root.classList.remove('cookie-yii2-locked');
+		}
+	}
+
+	function setDeniedView(box, denied) {
+		if (!box) {
+			return;
+		}
+		var choice = box.querySelector('.cookie-consent-choice');
+		var deniedBox = box.querySelector('.cookie-consent-denied');
+		if (choice) {
+			if (denied) {
+				choice.setAttribute('hidden', 'hidden');
+			} else {
+				choice.removeAttribute('hidden');
+			}
+		}
+		if (deniedBox) {
+			if (denied) {
+				deniedBox.removeAttribute('hidden');
+			} else {
+				deniedBox.setAttribute('hidden', 'hidden');
+			}
+		}
+		if (denied) {
+			box.classList.add('is-denied');
+		} else {
+			box.classList.remove('is-denied');
+		}
+	}
+
 	function hideBanner(box) {
 		if (!box) {
 			return;
 		}
 		box.classList.remove('show');
 		box.style.display = 'none';
+		lockPage(false);
+		setDeniedView(box, false);
 	}
 
-	function showBanner(box) {
+	function showBanner(box, denied) {
 		if (!box) {
 			return;
 		}
 		box.style.display = '';
 		box.classList.add('show');
+		setDeniedView(box, !!denied);
+		if (isWall(box)) {
+			lockPage(true);
+		}
 	}
 
 	function updateStatus(value) {
@@ -67,22 +122,42 @@
 		if (!status) {
 			return;
 		}
-		status.textContent = value === 'all'
-			? 'Сейчас включены нужные и аналитические cookie.'
-			: 'Сейчас включены только нужные cookie. Аналитика не запускается.';
+		if (value === 'all') {
+			status.textContent = 'Сейчас включены нужные и аналитические cookie.';
+			return;
+		}
+		if (value === 'denied') {
+			status.textContent = 'Вы отказались. Сайт без согласия не показываем.';
+			return;
+		}
+		status.textContent = 'Сейчас включены только нужные cookie. Аналитика не запускается.';
 	}
 
 	function applyConsent(value) {
+		var box = getBox();
 		setCookie(COOKIE_NAME, value, 365);
-		hideBanner(document.getElementById('cookieConsent'));
 		updateStatus(value);
 
 		if (value === 'all') {
+			hideBanner(box);
 			loadAnalytics();
 			return;
 		}
 
 		clearMetrikaCookies();
+
+		if (isWall(box) && value === 'denied') {
+			showBanner(box, true);
+			return;
+		}
+
+		if (isWall(box) && value === 'necessary') {
+			setCookie(COOKIE_NAME, 'denied', 365);
+			showBanner(box, true);
+			return;
+		}
+
+		hideBanner(box);
 		if (analyticsAlreadyLoaded()) {
 			window.location.reload();
 		}
@@ -94,7 +169,7 @@
 			nodes[i].addEventListener('click', function (event) {
 				event.preventDefault();
 				var value = this.getAttribute('data-cookie-consent');
-				if (value === 'all' || value === 'necessary') {
+				if (value === 'all' || value === 'necessary' || value === 'denied') {
 					applyConsent(value);
 				}
 			});
@@ -102,13 +177,20 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', function () {
-		var box = document.getElementById('cookieConsent');
+		var box = getBox();
 		var consent = getCookie(COOKIE_NAME);
 
 		if (consent === 'all') {
 			loadAnalytics();
 			hideBanner(box);
 			updateStatus(consent);
+			bindButtons();
+			return;
+		}
+
+		if (isWall(box) && (consent === 'denied' || consent === 'necessary')) {
+			showBanner(box, true);
+			updateStatus('denied');
 			bindButtons();
 			return;
 		}
@@ -120,10 +202,10 @@
 			return;
 		}
 
-		// Старое «true» / пусто — спрашиваем заново (раньше часто писали «продолжая использовать»).
+		// Старое «true» / пусто — спрашиваем заново.
 		if (box) {
 			setTimeout(function () {
-				showBanner(box);
+				showBanner(box, false);
 			}, 400);
 		}
 		bindButtons();
