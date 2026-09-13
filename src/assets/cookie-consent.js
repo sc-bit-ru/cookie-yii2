@@ -37,14 +37,10 @@
 		if (window.yiiCookieConsent && typeof window.yiiCookieConsent.loadAnalytics === 'function') {
 			window.yiiCookieConsent.loadAnalytics();
 		}
-		if (window.webdkMetrika && typeof window.webdkMetrika.load === 'function') {
-			window.webdkMetrika.load();
-		}
 	}
 
 	function analyticsAlreadyLoaded() {
-		return (window.yiiCookieConsent && window.yiiCookieConsent.loaded)
-			|| (window.webdkMetrika && window.webdkMetrika.loaded);
+		return !!(window.yiiCookieConsent && window.yiiCookieConsent.loaded);
 	}
 
 	function getBox() {

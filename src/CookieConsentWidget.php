@@ -27,7 +27,7 @@ class CookieConsentWidget extends Widget
     public $mode = self::MODE_BANNER;
 
     /**
-     * Префиксы пути, где нужен оверлей: oto, blog, news.
+     * Префиксы пути, где нужен оверлей: blog, catalog, news.
      * Пусто + mode=overlay — оверлей на всём сайте (кроме freePaths).
      * @var string[]
      */

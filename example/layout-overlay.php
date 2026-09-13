@@ -1,6 +1,6 @@
 <?php
 /**
- * Оверлей на раздел: /oto, /blog и т.п.
+ * Оверлей на выбранные пути: blog, catalog и т.п.
  * Обе кнопки открывают сайт. Метрика — только после «Принять все».
  */
 
@@ -23,7 +23,7 @@ use scbit\cookieconsent\YandexMetrikaWidget;
     'privacyUrl' => ['/site/privacy'],
     'cookiesUrl' => ['/site/cookies'],
     // На главной — плашка. На каталоге и в блоге — оверлей на весь экран.
-    'overlayPaths' => ['oto', 'blog'],
+    'overlayPaths' => ['blog', 'catalog'],
 ]) ?>
 
 <?= YandexMetrikaWidget::widget([
