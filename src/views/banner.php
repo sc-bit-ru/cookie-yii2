@@ -1,10 +1,19 @@
 <?php
 
+/** @var string $mode banner|overlay */
 /** @var string $text уже с ссылками */
 /** @var string $acceptLabel */
 /** @var string $rejectLabel */
+
+$isOverlay = $mode === 'overlay';
 ?>
-<div id="cookieConsent" role="dialog" aria-label="Согласие на cookie" aria-live="polite">
+<div id="cookieConsent"
+     class="<?= $isOverlay ? 'cookie-consent-overlay' : 'cookie-consent-banner' ?>"
+     data-cookie-consent-mode="<?= htmlspecialchars($mode, ENT_QUOTES, 'UTF-8') ?>"
+     role="dialog"
+     aria-modal="<?= $isOverlay ? 'true' : 'false' ?>"
+     aria-label="Согласие на cookie"
+     aria-live="polite">
     <div class="cookie-consent-inner">
         <p class="cookie-consent-text"><?= $text ?></p>
         <div class="cookie-consent-actions">

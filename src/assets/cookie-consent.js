@@ -1,4 +1,5 @@
 // Cookie consent (152-ФЗ): явное согласие, аналитика только после «Принять все».
+// overlay — закрывает экран до выбора; после «Только нужные» сайт открыт, Метрика нет.
 (function () {
 	var COOKIE_NAME = 'cookieConsent';
 	var METRIKA_COOKIES = ['_ym_uid', '_ym_d', '_ym_isad', '_ym_visorc', '_ym_debug'];
@@ -46,12 +47,29 @@
 			|| (window.webdkMetrika && window.webdkMetrika.loaded);
 	}
 
+	function getBox() {
+		return document.getElementById('cookieConsent');
+	}
+
+	function isOverlay(box) {
+		return !!(box && box.getAttribute('data-cookie-consent-mode') === 'overlay');
+	}
+
+	function lockPage(on) {
+		if (on) {
+			document.documentElement.classList.add('cookie-yii2-locked');
+		} else {
+			document.documentElement.classList.remove('cookie-yii2-locked');
+		}
+	}
+
 	function hideBanner(box) {
 		if (!box) {
 			return;
 		}
 		box.classList.remove('show');
 		box.style.display = 'none';
+		lockPage(false);
 	}
 
 	function showBanner(box) {
@@ -60,6 +78,9 @@
 		}
 		box.style.display = '';
 		box.classList.add('show');
+		if (isOverlay(box)) {
+			lockPage(true);
+		}
 	}
 
 	function updateStatus(value) {
@@ -74,7 +95,7 @@
 
 	function applyConsent(value) {
 		setCookie(COOKIE_NAME, value, 365);
-		hideBanner(document.getElementById('cookieConsent'));
+		hideBanner(getBox());
 		updateStatus(value);
 
 		if (value === 'all') {
@@ -102,7 +123,7 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', function () {
-		var box = document.getElementById('cookieConsent');
+		var box = getBox();
 		var consent = getCookie(COOKIE_NAME);
 
 		if (consent === 'all') {
@@ -120,7 +141,6 @@
 			return;
 		}
 
-		// Старое «true» / пусто — спрашиваем заново (раньше часто писали «продолжая использовать»).
 		if (box) {
 			setTimeout(function () {
 				showBanner(box);

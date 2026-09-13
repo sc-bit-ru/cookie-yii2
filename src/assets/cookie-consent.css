@@ -17,6 +17,46 @@
 	display: block;
 }
 
+html.cookie-yii2-locked,
+html.cookie-yii2-locked body {
+	overflow: hidden;
+}
+
+#cookieConsent.cookie-consent-overlay {
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	bottom: auto;
+	padding: 24px 16px;
+	background: rgba(10, 10, 12, 0.92);
+	box-shadow: none;
+	display: none;
+	align-items: center;
+	justify-content: center;
+}
+
+#cookieConsent.cookie-consent-overlay.show {
+	display: flex;
+}
+
+#cookieConsent.cookie-consent-overlay .cookie-consent-inner {
+	flex-direction: column;
+	align-items: stretch;
+	max-width: 560px;
+	width: 100%;
+	margin: 0;
+	padding: 24px 24px 20px;
+	background: #111;
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: 8px;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+#cookieConsent.cookie-consent-overlay .cookie-consent-actions {
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
 #cookieConsent .cookie-consent-inner {
 	display: flex;
 	align-items: center;
